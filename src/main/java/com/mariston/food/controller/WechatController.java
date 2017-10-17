@@ -67,7 +67,7 @@ public class WechatController {
 
             map.put("token", token);
         } catch (Exception e) {
-            logger.error("wechat login occur an error that is {}", e.getStackTrace()[0], e.getMessage());
+            logger.error("wechat login occur an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
             map.put("result", 0);
             map.put("errMsg", e.getMessage());
         }

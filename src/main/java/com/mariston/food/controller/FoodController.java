@@ -82,7 +82,7 @@ public class FoodController {
                 }
             }
         } catch (Exception e) {
-            logger.error("food detect fail,the error is {}", e.getStackTrace()[0], e.getMessage());
+            logger.error("food detect fail,the error is {}-{}", e.getStackTrace()[0], e.getMessage());
             map.put("result", 0);
             map.put("errMsg", e.getMessage());
         }

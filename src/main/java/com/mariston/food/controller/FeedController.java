@@ -2,9 +2,10 @@ package com.mariston.food.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.mariston.food.bean.User;
+import com.mariston.food.bean.Feeding;
+import com.mariston.food.bean.Food;
 import com.mariston.food.constant.WebConstant;
-import com.mariston.food.service.UserService;
+import com.mariston.food.service.FeedService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -16,80 +17,77 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * User Controller
+ * feeding controller
  *
  * @author mariston
  * @version V1.0
- * @since 2017/10/16
+ * @since 2017/10/17
  */
-@RequestMapping("/user")
+@RequestMapping("/feed")
 @Controller
-public class UserController {
+public class FeedController {
 
     /**
      * 日志
      */
-    private Logger logger = LoggerFactory.getLogger(UserController.class);
+    private Logger logger = LoggerFactory.getLogger(FeedController.class);
 
     /**
-     * user service
+     * feed service
      */
     @Resource
-    private UserService userService;
+    private FeedService feedService;
 
     /**
-     * save user info
+     * feeding food
      *
-     * @param user user info
+     * @param request request
+     * @param food    food
      * @return result
      */
-    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = {"text/html;charset=utf-8"})
+    @RequestMapping(value = "/do", method = RequestMethod.POST, produces = {"text/html;charset=utf-8"})
     @ResponseBody
-    public String save(HttpServletRequest request, User user) {
+    public String feed(HttpServletRequest request, Food food) {
 
         Map<String, Object> map = new HashMap<>();
-
         try {
             String token = request.getParameter(WebConstant.WECHAT_LOGIN_TOKEN);
-            Assert.hasText(token,"login token is empty or null");
-            Assert.notNull(user,"the info of user is null");
-            userService.save(token,user);
+            Assert.hasText(token, "login token is empty or null");
+            feedService.feeding(token, food);
             map.put("result", 1);
         } catch (Exception e) {
-            logger.error("saving user info occur an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
+            logger.error("feeding food occurs an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
             map.put("result", 0);
             map.put("errMsg", e.getMessage());
         }
-
         return JSON.toJSONString(map, SerializerFeature.WriteMapNullValue);
     }
 
     /**
-     * query user info
+     * query the list of feeding record
      *
      * @param wechatNo wechat no
      * @return result
      */
-    @RequestMapping(value = "/query", method = RequestMethod.POST, produces = {"text/html;charset=utf-8"})
+    @RequestMapping(value = "/queryList", method = RequestMethod.POST, produces = {"text/html;charset=utf-8"})
     @ResponseBody
-    public String query(String wechatNo) {
+    public String queryList(String wechatNo) {
 
         Map<String, Object> map = new HashMap<>();
-
         try {
-            User user = userService.query(wechatNo);
-            map.put("result", user == null ? 0 : 1);
-            map.put("user", user);
+            Assert.hasText(wechatNo, "wechat no is empty or null");
+            List<Feeding> feedings = feedService.queryList(wechatNo);
+            map.put("result", 1);
+            map.put("data", feedings);
         } catch (Exception e) {
-            logger.error("querying the user info by wechatNo, occurs an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
+            logger.error("Querying the list of feeding food occurs an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
             map.put("result", 0);
             map.put("errMsg", e.getMessage());
         }
-
         return JSON.toJSONString(map, SerializerFeature.WriteMapNullValue);
     }
-
 }
