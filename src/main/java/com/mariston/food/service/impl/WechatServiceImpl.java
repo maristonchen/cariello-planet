@@ -46,7 +46,7 @@ public class WechatServiceImpl implements WechatService {
         String token = WebUtils.genToken(sessionKey);
 
         //cache login token
-        cacheManager.getCache(WECHAT_CACHE).put(WebConstant.WECHAT_LOGIN_TOKEN, token);
+        cacheManager.getCache(WECHAT_CACHE).put(WebConstant.WECHAT_LOGIN_TOKEN, sessionKey);
 
         return token;
     }

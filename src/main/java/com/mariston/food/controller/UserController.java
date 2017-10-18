@@ -70,21 +70,22 @@ public class UserController {
     /**
      * query user info
      *
-     * @param openId wechat open id
      * @return result
      */
     @RequestMapping(value = "/query", method = RequestMethod.POST, produces = {"text/html;charset=utf-8"})
     @ResponseBody
-    public String query(String openId) {
+    public String query(HttpServletRequest request) {
 
         Map<String, Object> map = new HashMap<>();
 
         try {
-            User user = userService.query(openId);
+            String token = request.getParameter(WebConstant.WECHAT_LOGIN_TOKEN);
+            Assert.hasText(token,"login token is empty or null");
+            User user = userService.query(token);
             map.put("result", user == null ? 0 : 1);
             map.put("user", user);
         } catch (Exception e) {
-            logger.error("querying the user info by openId, occurs an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
+            logger.error("querying the user info by token, occurs an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
             map.put("result", 0);
             map.put("errMsg", e.getMessage());
         }

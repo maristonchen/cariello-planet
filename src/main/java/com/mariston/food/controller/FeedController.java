@@ -70,21 +70,51 @@ public class FeedController {
     /**
      * query the list of feeding record
      *
-     * @param openId wechat open id
+     * @param request request
+     * @param feeding feeding
      * @return result
      */
     @RequestMapping(value = "/queryList", method = RequestMethod.POST, produces = {"text/html;charset=utf-8"})
     @ResponseBody
-    public String queryList(Feeding feeding) {
+    public String queryList(HttpServletRequest request, Feeding feeding) {
 
         Map<String, Object> map = new HashMap<>();
         try {
-            Assert.notNull(feeding, "query condition is null");
-            List<Feeding> feedings = feedService.queryList(feeding);
+            String token = request.getParameter(WebConstant.WECHAT_LOGIN_TOKEN);
+            Assert.hasText(token, "login token is empty or null");
+            List<Feeding> feedings = feedService.queryList(token,feeding);
             map.put("result", 1);
             map.put("data", feedings);
         } catch (Exception e) {
             logger.error("Querying the list of feeding food occurs an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
+            map.put("result", 0);
+            map.put("errMsg", e.getMessage());
+        }
+        return JSON.toJSONString(map, SerializerFeature.WriteMapNullValue);
+    }
+
+    /**
+     * query the list of feeding record by time range
+     *
+     * @param request   request
+     * @param feeding   feeding
+     * @param startTime start time yyyy-MM-dd HH:mm:ss
+     * @param endTime   end time yyyy-MM-dd HH:mm:ss
+     * @return result
+     */
+    @RequestMapping(value = "/queryListByTimeRange", method = RequestMethod.POST, produces = {"text/html;charset=utf-8"})
+    @ResponseBody
+    public String queryListByTimeRange(HttpServletRequest request, Feeding feeding, String startTime, String endTime) {
+
+        Map<String, Object> map = new HashMap<>();
+        try {
+            String token = request.getParameter(WebConstant.WECHAT_LOGIN_TOKEN);
+            Assert.hasText(token, "login token is empty or null");
+            List<Feeding> feedings = feedService.queryListByTimeRange(token,feeding, startTime, endTime);
+            map.put("result", 1);
+            map.put("data", feedings);
+        } catch (Exception e) {
+            logger.error("Querying the list of feeding food by time range occurs an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
             map.put("result", 0);
             map.put("errMsg", e.getMessage());
         }

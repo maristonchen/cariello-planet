@@ -27,8 +27,8 @@ public interface UserService {
     /**
      * query user info
      *
-     * @param openId wechat no
+     * @param token wechat login token
      * @return the info of {@link User}
      */
-    User query(String openId);
+    User query(String token);
 }
