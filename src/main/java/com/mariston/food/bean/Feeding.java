@@ -13,10 +13,17 @@ import java.io.Serializable;
  * @version V1.0
  * @since 2017/10/16
  */
-@Table(name = "t_feeding",key = "openId",time = "feedTime")
+@Table(name = "t_feeding",key = "feedId",time = "feedTime")
 public class Feeding implements Serializable {
 
     private static final long serialVersionUID = 5921578438348825598L;
+
+    /**
+     * feed primary key
+     */
+    @DataType
+    private String feedId;
+
     /**
      * wechat open id
      */
@@ -40,6 +47,14 @@ public class Feeding implements Serializable {
      */
     @DataType
     private String feedTime;
+
+    public String getFeedId() {
+        return feedId;
+    }
+
+    public void setFeedId(String feedId) {
+        this.feedId = feedId;
+    }
 
     public String getOpenId() {
         return openId;

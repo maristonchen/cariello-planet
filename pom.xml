@@ -25,11 +25,6 @@
             <artifactId>web-tools</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.yhxd.soa</groupId>
-            <artifactId>mybatis-mapper</artifactId>
-            <version>1.0-RELEASE</version>
-        </dependency>
         <!-- spring begin ! -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -294,11 +289,6 @@
             <!--<artifactId>ojdbc6</artifactId>-->
         <!--</dependency>-->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
         </dependency>
@@ -306,28 +296,6 @@
         <!--<groupId>com.microsoft</groupId>-->
         <!--<artifactId>sqljdbc4</artifactId>-->
         <!--</dependency>-->
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.github.jsqlparser</groupId>
-                    <artifactId>jsqlparser</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.github.jsqlparser</groupId>
-            <artifactId>jsqlparser</artifactId>
-        </dependency>
         <!-- baidu api -->
         <dependency>
             <groupId>com.baidu.aip</groupId>

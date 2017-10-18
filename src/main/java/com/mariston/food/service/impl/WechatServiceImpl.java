@@ -53,7 +53,7 @@ public class WechatServiceImpl implements WechatService {
         String token = WebUtils.genToken(sessionKey);
 
         //cache login token
-        cacheManager.getCache(WECHAT_CACHE).put(WebConstant.WECHAT_LOGIN_TOKEN, sessionKey);
+        cacheManager.getCache(WECHAT_CACHE).put(token, sessionKey);
 
         //check user exist
         User user = sqliteDao.selectById(sessionKey.getOpenId(), User.class);

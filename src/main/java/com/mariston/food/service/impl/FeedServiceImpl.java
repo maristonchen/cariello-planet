@@ -6,7 +6,10 @@ import com.mariston.food.dao.SqliteDao;
 import com.mariston.food.service.FeedService;
 import com.mariston.food.service.WechatService;
 import com.riversoft.weixin.app.user.SessionKey;
+import com.yhxd.tools.base.collection.CollectionUtil;
 import com.yhxd.tools.base.date.DateFormatUtil;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +49,7 @@ public class FeedServiceImpl implements FeedService {
 
         // feeding record
         Feeding feeding = new Feeding();
+        feeding.setFeedId(DateFormatUtil.currentDateTime("yyyyMMddHHmmssSSS")+ RandomStringUtils.random(6,true,true));
         feeding.setOpenId(sessionKey.getOpenId());
         feeding.setFoodName(food.getName());
         feeding.setCalorie(food.getCalorie());
@@ -68,7 +72,13 @@ public class FeedServiceImpl implements FeedService {
         SessionKey sessionKey = cacheManager.getCache(WechatService.WECHAT_CACHE).get(token, SessionKey.class);
         Assert.notNull(sessionKey, "the token is unused,maybe time out");
         feeding.setOpenId(sessionKey.getOpenId());
-        return sqliteDao.selectList(feeding, Feeding.class);
+        List<Feeding> feedings = sqliteDao.selectList(feeding, Feeding.class);
+        if (CollectionUtil.isNotEmpty(feedings)) {
+            for (Feeding f : feedings) {
+                f.setOpenId(StringUtils.EMPTY);
+            }
+        }
+        return feedings;
     }
 
     /**
@@ -85,7 +95,13 @@ public class FeedServiceImpl implements FeedService {
         SessionKey sessionKey = cacheManager.getCache(WechatService.WECHAT_CACHE).get(token, SessionKey.class);
         Assert.notNull(sessionKey, "the token is unused,maybe time out");
         feeding.setOpenId(sessionKey.getOpenId());
-        return sqliteDao.selectListByTimeRange(feeding, startTime, endTime, Feeding.class);
+        List<Feeding> feedings = sqliteDao.selectListByTimeRange(feeding, startTime, endTime, Feeding.class);
+        if (CollectionUtil.isNotEmpty(feedings)) {
+            for (Feeding f : feedings) {
+                f.setOpenId(StringUtils.EMPTY);
+            }
+        }
+        return feedings;
     }
 
 }

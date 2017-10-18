@@ -2,6 +2,9 @@ package com.mariston.food.dao.impl;
 
 import com.mariston.food.dao.SqliteDao;
 import com.mariston.food.util.SQLUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,6 +13,7 @@ import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +25,11 @@ import java.util.List;
  */
 @Repository("sqliteDao")
 public class SqliteDaoImpl implements SqliteDao {
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(SqliteDaoImpl.class);
 
     @Resource
     private JdbcTemplate jdbcTemplate;
@@ -64,7 +73,13 @@ public class SqliteDaoImpl implements SqliteDao {
         String sql = SQLUtils.genSelectOneSQL(id, clazz);
         Assert.hasText(sql, "sql is empty or null");
         RowMapper<T> rowMapper = BeanPropertyRowMapper.newInstance(clazz);
-        return jdbcTemplate.queryForObject(sql, rowMapper);
+        T t = null;
+        try {
+            t =  jdbcTemplate.queryForObject(sql, rowMapper);
+        } catch (Exception e) {
+            logger.error("select data by id occurs an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
+        }
+        return t;
     }
 
     /**
@@ -79,7 +94,13 @@ public class SqliteDaoImpl implements SqliteDao {
         String sql = SQLUtils.genSelectListSQL(t, clazz);
         Assert.hasText(sql, "sql is empty or null");
         RowMapper<T> rowMapper = BeanPropertyRowMapper.newInstance(clazz);
-        return jdbcTemplate.query(sql, rowMapper);
+        List<T> list = new ArrayList<>();
+        try {
+            list = jdbcTemplate.query(sql, rowMapper);
+        } catch (Exception e) {
+            logger.error("select list  occurs an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
+        }
+        return list;
     }
 
     /**
@@ -96,6 +117,12 @@ public class SqliteDaoImpl implements SqliteDao {
         String sql = SQLUtils.genSelectListByTimeRangeSQL(t, startTime, endTime, clazz);
         Assert.hasText(sql, "sql is empty or null");
         RowMapper<T> rowMapper = BeanPropertyRowMapper.newInstance(clazz);
-        return jdbcTemplate.query(sql, rowMapper);
+        List<T> list = new ArrayList<>();
+        try {
+            list = jdbcTemplate.query(sql, rowMapper);
+        } catch (Exception e) {
+            logger.error("select list  occurs an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
+        }
+        return list;
     }
 }

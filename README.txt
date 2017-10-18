@@ -6,7 +6,7 @@ cariello-planet 是springMVC+sqlite 框架结合原型项目
 (1)微信授权登录
 访问地址：http://122.112.210.142/planet/wechat/login
 访问参数:  code (String)
-返回结果：成功 {"result":1,"token":"fjwej3jerj82348439"}
+返回结果：成功 {"result":1,"token":"fjwej3jerj82348439","ifSave":true}
               失败 {"result":0,"errMsg":"错误错误"}
 
 (2)菜品识别

@@ -90,7 +90,7 @@ public class FeedController {
             map.put("result", 0);
             map.put("errMsg", e.getMessage());
         }
-        return JSON.toJSONString(map, SerializerFeature.WriteMapNullValue);
+        return JSON.toJSONString(map);
     }
 
     /**
@@ -118,6 +118,6 @@ public class FeedController {
             map.put("result", 0);
             map.put("errMsg", e.getMessage());
         }
-        return JSON.toJSONString(map, SerializerFeature.WriteMapNullValue);
+        return JSON.toJSONString(map);
     }
 }
