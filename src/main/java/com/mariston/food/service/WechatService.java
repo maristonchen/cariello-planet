@@ -1,5 +1,7 @@
 package com.mariston.food.service;
 
+import java.util.Map;
+
 /**
  * wechat service interface
  *
@@ -18,7 +20,7 @@ public interface WechatService {
      * wechat login and get session key
      *
      * @param code login code
-     * @return token
+     * @return token and ifSave
      */
-    String login(String code);
+    Map<String,Object> login(String code);
 }

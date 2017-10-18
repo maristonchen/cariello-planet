@@ -1,6 +1,8 @@
 package com.mariston.food.service.impl;
 
+import com.mariston.food.bean.User;
 import com.mariston.food.constant.WebConstant;
+import com.mariston.food.dao.SqliteDao;
 import com.mariston.food.service.WechatService;
 import com.mariston.food.util.WebUtils;
 import com.riversoft.weixin.app.base.AppSetting;
@@ -11,6 +13,8 @@ import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * wechat service implement
@@ -22,14 +26,17 @@ import javax.annotation.Resource;
 @Service("wechatService")
 public class WechatServiceImpl implements WechatService {
 
-    @Resource
-    private CacheManager cacheManager;
-
     @Value("${wechat.app.id}")
     private String appId;
 
     @Value("${wechat.secret}")
     private String secret;
+
+    @Resource
+    private CacheManager cacheManager;
+
+    @Resource
+    private SqliteDao sqliteDao;
 
     /**
      * wechat login and get session key
@@ -38,7 +45,7 @@ public class WechatServiceImpl implements WechatService {
      * @return token
      */
     @Override
-    public String login(String code) {
+    public Map<String, Object> login(String code) {
         //wechat session_key
         SessionKey sessionKey = Users.with(new AppSetting(appId, secret)).code2Session(code);
 
@@ -48,6 +55,13 @@ public class WechatServiceImpl implements WechatService {
         //cache login token
         cacheManager.getCache(WECHAT_CACHE).put(WebConstant.WECHAT_LOGIN_TOKEN, sessionKey);
 
-        return token;
+        //check user exist
+        User user = sqliteDao.selectById(sessionKey.getOpenId(), User.class);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(WebConstant.WECHAT_LOGIN_TOKEN, token);
+        map.put("ifSave", user != null);
+
+        return map;
     }
 }

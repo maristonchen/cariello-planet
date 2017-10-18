@@ -58,14 +58,15 @@ public class WechatController {
             String code = request.getParameter("code");
 
             //login and get token
-            String token = wechatService.login(code);
+            Map<String,Object> loginMap = wechatService.login(code);
 
             //save the token in session
-            WebUtils.setSessionAttribute(request, WebConstant.WECHAT_LOGIN_TOKEN, token);
+            WebUtils.setSessionAttribute(request, WebConstant.WECHAT_LOGIN_TOKEN, loginMap.get(WebConstant.WECHAT_LOGIN_TOKEN));
 
-            map.put("result", StringUtils.isNotBlank(token) ? 1 : 0);
+            map.put("result", loginMap.isEmpty() ? 0 : 1);
 
-            map.put("token", token);
+            map.putAll(loginMap);
+
         } catch (Exception e) {
             logger.error("wechat login occur an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
             map.put("result", 0);
