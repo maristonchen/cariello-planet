@@ -1,6 +1,10 @@
 package com.mariston.food.bean;
 
 import com.alibaba.fastjson.JSON;
+import com.mariston.food.annotation.DataType;
+import com.mariston.food.annotation.Table;
+
+import java.io.Serializable;
 
 /**
  * feeding record
@@ -9,35 +13,40 @@ import com.alibaba.fastjson.JSON;
  * @version V1.0
  * @since 2017/10/16
  */
-public class Feeding {
+@Table(name = "t_feeding",key = "openId",time = "feedTime")
+public class Feeding implements Serializable {
 
+    private static final long serialVersionUID = 5921578438348825598L;
     /**
-     * wechat no
+     * wechat open id
      */
-    private String wechatNo;
+    @DataType
+    private String openId;
 
     /**
      * food name
      */
+    @DataType
     private String foodName;
 
     /**
      * food calorie
      */
+    @DataType
     private String calorie;
 
     /**
      * feeding food time
      */
+    @DataType
     private String feedTime;
 
-
-    public String getWechatNo() {
-        return wechatNo;
+    public String getOpenId() {
+        return openId;
     }
 
-    public void setWechatNo(String wechatNo) {
-        this.wechatNo = wechatNo;
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 
     public String getFoodName() {

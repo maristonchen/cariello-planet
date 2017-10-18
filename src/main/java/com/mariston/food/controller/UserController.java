@@ -70,21 +70,21 @@ public class UserController {
     /**
      * query user info
      *
-     * @param wechatNo wechat no
+     * @param openId wechat open id
      * @return result
      */
     @RequestMapping(value = "/query", method = RequestMethod.POST, produces = {"text/html;charset=utf-8"})
     @ResponseBody
-    public String query(String wechatNo) {
+    public String query(String openId) {
 
         Map<String, Object> map = new HashMap<>();
 
         try {
-            User user = userService.query(wechatNo);
+            User user = userService.query(openId);
             map.put("result", user == null ? 0 : 1);
             map.put("user", user);
         } catch (Exception e) {
-            logger.error("querying the user info by wechatNo, occurs an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
+            logger.error("querying the user info by openId, occurs an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
             map.put("result", 0);
             map.put("errMsg", e.getMessage());
         }

@@ -25,8 +25,18 @@ public interface FeedService {
     /**
      * query the list of feeding food
      *
-     * @param wechatNo wechat no
+     * @param feeding feeding query condition
      * @return the list of record
      */
-    List<Feeding> queryList(String wechatNo);
+    List<Feeding> queryList(Feeding feeding);
+
+    /**
+     * query the list of feeding food
+     *
+     * @param feeding feeding query condition
+     * @param startTime start time
+     * @param endTime end time
+     * @return the list of record
+     */
+    List<Feeding> queryListByTimeRange(Feeding feeding,String startTime ,String endTime);
 }

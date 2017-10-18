@@ -70,17 +70,17 @@ public class FeedController {
     /**
      * query the list of feeding record
      *
-     * @param wechatNo wechat no
+     * @param openId wechat open id
      * @return result
      */
     @RequestMapping(value = "/queryList", method = RequestMethod.POST, produces = {"text/html;charset=utf-8"})
     @ResponseBody
-    public String queryList(String wechatNo) {
+    public String queryList(Feeding feeding) {
 
         Map<String, Object> map = new HashMap<>();
         try {
-            Assert.hasText(wechatNo, "wechat no is empty or null");
-            List<Feeding> feedings = feedService.queryList(wechatNo);
+            Assert.notNull(feeding, "query condition is null");
+            List<Feeding> feedings = feedService.queryList(feeding);
             map.put("result", 1);
             map.put("data", feedings);
         } catch (Exception e) {

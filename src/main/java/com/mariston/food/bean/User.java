@@ -1,73 +1,127 @@
 package com.mariston.food.bean;
 
 import com.alibaba.fastjson.JSON;
+import com.mariston.food.annotation.DataType;
+import com.mariston.food.annotation.Table;
 
 import java.io.Serializable;
 
 /**
- * user
+ * user info
+ * <p>
+ * wechat userinfo:
+ * <p>
+ * {
+ * "openId": "OPENID",
+ * "nickName": "NICKNAME",
+ * "gender": GENDER,
+ * "city": "CITY",
+ * "province": "PROVINCE",
+ * "country": "COUNTRY",
+ * "avatarUrl": "AVATARURL",
+ * "unionId": "UNIONID",
+ * "watermark":
+ * {
+ * "appid":"APPID",
+ * "timestamp":TIMESTAMP
+ * }
+ * }
  *
  * @author mariston
  * @version V1.0
  * @since 2017/10/16
  */
-public class User implements Serializable{
+@Table(name = "t_user",key = "openId",time = "createTime")
+public class User implements Serializable {
+
+    private static final long serialVersionUID = -3683400018270846391L;
+    /**
+     * wechat open id
+     */
+    @DataType
+    private String openId;
 
     /**
-     * wechat no
+     * nick name
      */
-    private String wechatNo;
-
-    /**
-     * name
-     */
-    private String name;
+    @DataType
+    private String nickName;
 
     /**
      * weight
      */
+    @DataType
     private String weight;
 
     /**
-     * sex
+     * gender
      */
-    private String sex;
+    @DataType
+    private String gender;
 
     /**
      * birthday
      */
+    @DataType
     private String birthday;
 
     /**
      * body fat percentage
      */
+    @DataType
     private String bodyFat;
 
     /**
      * basal metabolism
      */
+    @DataType
     private String metabolism;
+
+    /**
+     * city
+     */
+    @DataType
+    private String city;
+
+    /**
+     * province
+     */
+    @DataType
+    private String province;
+
+    /**
+     * country
+     */
+    @DataType
+    private String country;
+
+    /**
+     * avatarUrl
+     */
+    @DataType
+    private String avatarUrl;
 
     /**
      * the create time of this record
      */
+    @DataType
     private String createTime;
 
 
-    public String getWechatNo() {
-        return wechatNo;
+    public String getOpenId() {
+        return openId;
     }
 
-    public void setWechatNo(String wechatNo) {
-        this.wechatNo = wechatNo;
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 
-    public String getName() {
-        return name;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getWeight() {
@@ -78,12 +132,12 @@ public class User implements Serializable{
         this.weight = weight;
     }
 
-    public String getSex() {
-        return sex;
+    public String getGender() {
+        return gender;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getBirthday() {
@@ -108,6 +162,38 @@ public class User implements Serializable{
 
     public void setMetabolism(String metabolism) {
         this.metabolism = metabolism;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public String getCreateTime() {
