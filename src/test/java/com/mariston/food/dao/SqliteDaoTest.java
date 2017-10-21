@@ -30,9 +30,10 @@ public class SqliteDaoTest {
 
     @Test
     public void insert() throws Exception {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             Thread.sleep(10000);
             Feeding feeding = new Feeding();
+            feeding.setFeedId(RandomStringUtils.random(6,true,true));
             feeding.setOpenId(RandomStringUtils.random(6,false,true));
             feeding.setFoodName("水果沙拉"+i);
             feeding.setCalorie(RandomStringUtils.random(4,false,true));

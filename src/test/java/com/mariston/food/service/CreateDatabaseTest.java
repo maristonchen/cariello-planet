@@ -4,8 +4,14 @@ import com.mariston.food.bean.Feeding;
 import com.mariston.food.bean.User;
 import com.mariston.food.util.SQLUtils;
 import com.yhxd.tools.base.date.DateFormatUtil;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -30,10 +36,10 @@ public class CreateDatabaseTest {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-            statement.executeUpdate("drop table if exists t_feeding");
-            statement.executeUpdate("drop table if exists t_user");
-            statement.executeUpdate(SQLUtils.genCreateSQL(User.class));
-            statement.executeUpdate(SQLUtils.genCreateSQL(Feeding.class));
+//            statement.executeUpdate("drop table if exists t_feeding");
+//            statement.executeUpdate("drop table if exists t_user");
+//            statement.executeUpdate(SQLUtils.genCreateSQL(User.class));
+//            statement.executeUpdate(SQLUtils.genCreateSQL(Feeding.class));
 
 //            User user = new User();
 //            user.setOpenId("4444");
@@ -42,12 +48,13 @@ public class CreateDatabaseTest {
 //            user.setGender("0");
 //            statement.executeUpdate(SQLUtils.genInsertSQL(user));
 
-//            Feeding feeding = new Feeding();
-//            feeding.setOpenId("2342342342342");
-//            feeding.setFoodName("sand");
-//            feeding.setCalorie("242");
-//            feeding.setFeedTime("1234123423423");
-//            statement.executeUpdate(SQLUtils.genInsertSQL(feeding));
+            Feeding feeding = new Feeding();
+            feeding.setFeedId(RandomStringUtils.random(14,true,true));
+            feeding.setOpenId("2342342342342");
+            feeding.setFoodName("sand");
+            feeding.setCalorie("242");
+            feeding.setFeedTime(DateFormatUtil.currentDateTime());
+            statement.executeUpdate(SQLUtils.genInsertSQL(feeding));
 
         } catch (SQLException e) {
             // if the error message is "out of memory",
@@ -61,6 +68,23 @@ public class CreateDatabaseTest {
                 // connection close failed.
                 System.err.println(e);
             }
+        }
+    }
+
+    @Test
+    public void fetchCal() {
+
+        String url = "http://www.boohee.com/food/search?keyword=踢脚线" ;
+
+        try {
+            Document doc = Jsoup.connect(url).get();
+            Elements newsHeadlines = doc.select(".food-list li div p");
+            for (Element line : newsHeadlines) {
+                System.out.println(line.ownText());
+            }
+            System.out.println(newsHeadlines);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

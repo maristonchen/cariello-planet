@@ -4,8 +4,15 @@ package com.mariston.food.baidu;
 import com.alibaba.fastjson.JSON;
 import com.baidu.aip.imageclassify.AipImageClassify;
 import com.mariston.food.bean.Food;
+import com.yhxd.tools.base.collection.CollectionUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,6 +29,11 @@ import java.util.HashMap;
  */
 @Service
 public class FoodApi implements InitializingBean {
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FoodApi.class);
 
     /**
      * baidu app id
@@ -67,15 +79,45 @@ public class FoodApi implements InitializingBean {
         options.put("top_num", "3");
 
         JSONObject res = client.dishDetect(foodImageData, options);
-        System.out.println(res.toString(2));
+        logger.info("===菜品识别:\n{}", res.toString(2));
         JSONArray array = res.getJSONArray("result");
         if (array != null && array.length() > 0) {
             food = JSON.parseObject(array.getJSONObject(0).toString(), Food.class);
+/*            if (food != null && StringUtils.equals(food.getCalorie(), "0")) {
+                JSONObject pres = client.plantDetect(foodImageData, options);
+                logger.info("===植物识别:\n{}", pres.toString(2));
+                JSONArray parray = pres.getJSONArray("result");
+                if (parray != null && array.length() > 0) {
+                    JSONObject pobj = parray.getJSONObject(0);
+                    String fname = pobj.getString("name");
+                    String calorie = fetchCalorie(fname);
+                    if (StringUtils.isNotBlank(calorie)) {
+                        food.setProbability(pobj.get("score").toString());
+                        food.setName(fname);
+                        food.setCalorie(calorie);
+                    }
+                }
+            }*/
         }
-
         return food;
     }
 
+    private String fetchCalorie(String foodName) {
+        String url = "http://www.boohee.com/food/search?keyword=" + foodName;
+
+        try {
+            Document doc = Jsoup.connect(url).get();
+            Elements newsHeadlines = doc.select(".food-list li div p");
+            if (CollectionUtil.isNotEmpty(newsHeadlines)) {
+                String line = newsHeadlines.get(0).ownText();
+                logger.info("薄荷网获取{}→{}", foodName, line);
+                return StringUtils.substringBetween(line, "热量：", " 大卡");
+            }
+        } catch (Exception e) {
+            logger.error("fetch calorie occurs an error that is {}-{}", e.getStackTrace()[0], e.getMessage());
+        }
+        return StringUtils.EMPTY;
+    }
 
     /**
      * Invoked by a BeanFactory after it has set all bean properties supplied
